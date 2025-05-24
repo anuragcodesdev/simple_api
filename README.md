@@ -24,7 +24,9 @@ This is a simple project I built to review and reinforce my understanding of wor
 
 1. Clone this repo:
 
-:TODO:
+   ```bash
+   git clone https://github.com/anuragcodesdev/simple_api.git
+   ```
 
 2. Create and activate a virtual environment:
     python -m venv venv
@@ -50,5 +52,4 @@ This is a simple project I built to review and reinforce my understanding of wor
     
     `{whatever_server_stated}`/combined?city=Melbourne
 
-    mine was:
-    http://127.0.0.1:8000/combined?city=Melbourne
+    Replace 'Melbourne' with any city you want.
