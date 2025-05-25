@@ -1,30 +1,34 @@
-import requests
-from typing import List, Dict
+from typing import Dict, Optional
+from httpx import HTTPStatusError
+from app.utils.client import async_client
 from ..config import settings
 
-def get_weather(city: str) -> Dict[str, object]:
+async def get_weather(city: str) -> Optional[Dict[str, str]]:
     """
-    Get current weather data for the specified city.
+    Fetches current weather data for a city.
 
-    Params:
-        :city: Name of the city to fetch weather for.
+    Args:
+        city (str): The city to fetch weather for.
 
     Returns:
-        :Dict[str, object]: Dictionary containing:
-            - 'temperature' (float): Current temperature in Celsius.
-            - 'description' (str): Weather description.
+        Optional[Dict[str, str]]: Temperature and weather description, or None if failed.
     """
-    api_key = settings.WEATHER_API_KEY
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+    url = (
+        f"http://api.openweathermap.org/data/2.5/weather?"
+        f"q={city}&appid={settings.WEATHER_API_KEY}&units=metric"
+    )
+    
     try:
-        response = requests.get(url)
-        response.raise_for_status() # raise error if status isn't 200.
+        response = await async_client.get(url, timeout=10)
+        response.raise_for_status()
         data = response.json()
-    except requests.RequestException as e:
-        print(f"Weather API request failed: {e}")
-        return {}
+        return {
+            "temperature": data["main"]["temp"],
+            "description": data["weather"][0]["description"]
+        }
+    except HTTPStatusError as e:
+        print(f"Weather API, HTTP error: {e.response.status_code} - {e.response.text}")
+    except Exception as e:
+        print(f"Weather API Request failed: {e}")
 
-    return {
-        "temperature": data["main"]["temp"],
-        "description": data["weather"][0]["description"]
-    }
+    return None
