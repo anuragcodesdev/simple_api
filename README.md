@@ -44,9 +44,9 @@ This is a simple project I built to review and reinforce my understanding of wor
 
 ## Running the app
 1. Start the FastAPI server with:
-    '''bash
+    ```bash
     uvicorn run:fastapi_app --reload
-    '''
+    ```
 
 2. Open your browser and go to:
     
